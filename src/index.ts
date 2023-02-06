@@ -34,13 +34,6 @@ AppDataSource.initialize()
     app.use('/api/auth', authRouter);
     app.use('/api/user', userRouter);
 
-    // HEALTH CHECKER
-    app.get('/', async (_, res: Response) => {
-      res.status(200).json({
-        status: 'success',
-      });
-    });
-
     // UNHANDLED ROUTE
     app.all('*', (req: Request, res: Response, next: NextFunction) => {
       next(new AppError(404, `Route ${req.originalUrl} not found`));
