@@ -1,0 +1,23 @@
+version: '3.6'
+services:
+  server:
+    build: .
+    ports:
+      - ${PORT}:${PORT}
+    env_file: .env
+    depends_on:
+      - db
+  db:
+    image: postgres:10.16
+    # environment:
+    #   POSTGRES_USER: postgres
+    #   POSTGRES_PASSWORD: password
+    #   POSTGRES_DB: postgres
+    env_file:
+      - ./.env
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
