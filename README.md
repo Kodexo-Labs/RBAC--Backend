@@ -17,6 +17,15 @@ touch .env
 # open .env and modify the environment variables (if needed)
 ```
 
+Docker Compose Commands:
+
+```bash
+docker compose build
+```
+```bash
+docker compose up
+```
+
 ## 📑 Table of Contents
 
 - [Features](#features)
@@ -25,21 +34,17 @@ touch .env
 - [Project Structure](#project-structure)
 - [Error Handling](#error-handling)
 - [Validation](#validation)
-- [Authentication](#authentication)
-- [Authorization](#authorization)
-- [Documentation](#documentation)
 - [Linting](#linting)
 
 ## 🪶 Features
 
-- **NoSQL database**: [MongoDB](https://www.mongodb.com) object data modeling using [Mongoose](https://mongoosejs.com)
-- **Validation**: request data validation using [Express-Validator](https://express-validator.github.io/docs/)
-- **Testing**: unit and integration tests using [Jest](https://jestjs.io)
+- **SQL database**: [PostgreSQL](https://www.postgresql.org/) object relational mapping using [TypeORM](https://typeorm.io/)
+- **Validation**: schema declaration and validation using [zod](https://zod.dev/)
 - **Error handling**: centralized error handling mechanism
 - **Dependency management**: with [Yarn](https://yarnpkg.com)
-- **Environment variables**: using [dotenv](https://github.com/motdotla/dotenv) and [cross-env](https://github.com/kentcdodds/cross-env#readme)
+- **Environment variables**: using [dotenv](https://github.com/motdotla/dotenv), 
+[config](https://github.com/node-config/node-config) and [envalid](https://github.com/af/envalid)
 - **CORS**: Cross-Origin Resource-Sharing enabled using [cors](https://github.com/expressjs/cors)
-- **Git hooks**: with [husky](https://github.com/typicode/husky)
 - **Linting**: with [ESLint](https://eslint.org) and [Prettier](https://prettier.io)
 
 ## 🪟 Commands
@@ -56,63 +61,35 @@ Running in production:
 yarn start
 ```
 
-Testing:
-
-```bash
-# run all tests
-yarn test
-
-# run all tests in watch mode
-yarn test:watch
-
-# run test coverage
-yarn coverage
-```
-
-Linting:
-
-```bash
-# run ESLint
-yarn lint
-
-```
-
 ## 👽 Environment Variables
 
 The environment variables can be found and modified in the `.env` file. They come with these default values:
 
 ```bash
-     SENDGRID_API_KEY*
-     I_AM_ACCESS_ID*
-     I_AM_SECRET*
-     BUCKET_NAME*
-     ACCESS_TOKEN_SECRET*
-     REFRESH_TOKEN_SECRET*
-     TWILIO_ACCOUNT_SID*
-     TWILIO_AUTH_TOKEN*
-     TWILIO_PHONE_NUMBER*
-     HOST*
-     COUNTRY_CODE*
-     PASSWORD_REDIRECT_URL*
-     DATABASE_URL*
-     TWILIO_MESSAGING_SERVICE_SID*
-     BASE_IMAGE_URL*
-     SILVER_ROCK_TPA*
-     CARVANA_USER_ID*
+    PORT*
+    NODE_ENV*
+    POSTGRES_HOST*
+    POSTGRES_PORT*
+    POSTGRES_USER*
+    POSTGRES_PASSWORD*
+    POSTGRES_DB*
+    JWT_ACCESS_TOKEN_PRIVATE_KEY*
+    JWT_REFRESH_TOKEN_PRIVATE_KEY*
 ```
 
 ## 🚧 Project Structure
 
 ```
 src\
- |--config\         # configuration related things
  |--controllers\    # Route controllers (controller layer)
+ |--entities\       # TypeORM Entities (data layer)
  |--middlewares\    # Custom express middlewares
- |--models\         # Mongoose models (data layer)
- |--appRoutes\      # Routes
- |--utils\          # Utility classes and functions
- |--app.js          # Express app
- |--index.js        # App entry point
+ |--migrations\     # PostrgreSQL Database migrations
+ |--routes\         # Routes
+ |--schemas\        # Schema declaration and validation
+ |--services\       # crud services for controller
+ |--utils\          # Utility classes, functions and data-source for DB
+ |--index.ts        # App entry point
 ```
 
 ### 🅿️ API Endpoints
@@ -120,20 +97,15 @@ src\
 List of available routes:
 
 **Auth routes**:\
-`POST /signin` - sigin\
-`POST /refreshRokens` - refresh auth tokens\
-`POST /requestPassword` - send reset password email\
-`POST /changePassword` - reset password\
-`POST /email` - verify email
+`POST /api/auth/register` - signup\
+`POST /api/auth/login` - login\
+`GET /api/auth/refresh` - refresh auth tokens\
+`GET /api/auth/logout` - logout\
 
 **User routes**:\
-`POST /user` - create a user\
-`GET /user` - get all users\
-`GET /user/:id` - get user\
-`PATCH /user/:id` - update user\
-`DELETE /user/:id` - delete user\
+`GET api/user/me` - get user profile\
 
-Complete Api Documentation :[Click here](https://documenter.getpostman.com/view/15600448/UVe9RUeh)
+<!-- Complete Api Documentation :[Click here](https://documenter.getpostman.com/view/15600448/UVe9RUeh) -->
 
 ## ⁉️ Error Handling
 
@@ -152,60 +124,8 @@ The error handling middleware sends an error response, which has the following f
 
 ## 🪝 Validation
 
-Request data is validated using [Express-Validator](https://express-validator.github.io/docs/).
-The validation schemas are defined in the `src/validations` directory and are used in the routes by providing them as parameters to the `validate` middleware.
-
-## 🤸 Authentication
-
-To require authentication for certain routes, you can use the `auth` middleware.
-
-```javascript
-const express = require('express');
-const requireAuth = require('../../middlewares/requireAuth');
-const { addUser } = require('../../controllers/user');
-
-const router = express.Router();
-
-router.post('/users', requireAuth, addUser);
-```
-
-These routes require a valid JWT access token in the Authorization request header using the Bearer schema. If the request does not contain a valid access token, an Unauthorized (401) error is thrown.
-
-** 🉑 Generating Access Tokens**:
-
-An access token can be generated by making a successful call to the register or login (`POST /login`) endpoint. The response of this also contains refresh tokens and access token (explained below).
-
-An access token is valid for 1 day. You can modify this expiration time by changing the `expiresIn` property .
-
-**Refreshing Access Tokens**:
-
-After the access token expires, a new access token can be generated, by making a call to the refresh token endpoint (`POST /refreshTokens`) and sending along a valid refresh token in the request body. This call returns a new access token and a new refresh token.
-
-A refresh token is valid for 30 days. You can modify this expiration time by changing the `expiresIn` property.
-
-## 🦽 Authorization
-
-The `auth` middleware can also be used to require certain rights/permissions to access a route.
-
-```javascript
-const express = require('express');
-const roleAuth = require('../../middlewares/roleAuth');
-const { addUser } = require('../../controllers/user');
-
-const router = express.Router();
-
-router.post('/users', roleAuth(['admin', 'tpa_admin']), addUser);
-```
-
-In the example above, an authenticated user can access this route only if that user has the `manageUsers` permission.
-
-The permissions are role-based. You can view the permissions/rights of each role in the `src/config/roles.js` file.
-
-If the user making the request does not have the required permissions to access this route, a Forbidden (403) error is thrown.
-
-## 📄 Documentation
-
-[Click here](https://documenter.getpostman.com/view/15600448/UVe9RUeh)
+Request data is validated using [zod](https://zod.dev/).
+The validation schemas are defined in the `src/schemas` directory and are used in the routes by providing them as parameters to the `validate` middleware.
 
 ## ☑️ Linting
 
