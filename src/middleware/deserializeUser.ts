@@ -23,12 +23,12 @@ export const deserializeUser = async (
     if (!access_token) {
       return next(new AppError(401, 'You are not logged in'));
     }
-    
+
     // Validate the access token
     const decoded = verifyJwt<{ sub: string }>(
       access_token,
-      'accessTokenPublicKey'
-      );
+      'accessTokenPrivateKey'
+    );
       
       if (!decoded) {
         return next(new AppError(401, `Invalid token or user doesn't exist`));

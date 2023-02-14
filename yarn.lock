@@ -91,6 +91,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/easy-rbac@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@types/easy-rbac/-/easy-rbac-3.1.2.tgz#e494c1bc60074f249767098468bb78f62920085e"
+  integrity sha512-Qj5B2Ublvm1BmjS9KIUeJcVqNdsdc9U1/hzvk6Mx9TcXPC2uJpsmDB2zUqKJkGqrcDak/qQZXw+Gz4BgJZy4mA==
+
 "@types/express-serve-static-core@^4.17.31", "@types/express-serve-static-core@^4.17.33":
   version "4.17.33"
   resolved "https://registry.npmjs.org/@types/express-serve-static-core/-/express-serve-static-core-4.17.33.tgz"
@@ -492,6 +497,13 @@ dotenv@^16.0.0, dotenv@^16.0.3:
   resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.0.3.tgz"
   integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
 
+easy-rbac@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/easy-rbac/-/easy-rbac-3.2.0.tgz#bceeaebb491bf60dfd3824865e8a816c94697912"
+  integrity sha512-cRBiDCWPg0QwTwR98lDFkar0ZpDXk7MWGxhqvnkXcPDPu0jtq82uRroxErgr3O78hgqWZ6BGcqYJRyyHD5Hl+A==
+  dependencies:
+    debug "^4.3.3"
+
 ecdsa-sig-formatter@1.0.11:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.11.tgz#ae0f0fa2d85045ef14a817daa3ce9acd0489e5bf"
@@ -536,7 +548,7 @@ etag@~1.8.1:
   resolved "https://registry.npmjs.org/etag/-/etag-1.8.1.tgz"
   integrity sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==
 
-express@^4.18.2:
+express@^4.17.2:
   version "4.18.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.18.2.tgz#3fabe08296e930c796c19e3c516979386ba9fd59"
   integrity sha512-5/PsL6iGPdfQ/lKM1UuielYgv3BUoJfz1aUwU9vHZ+J7gyvwdQXFEBIEIaxeGf0GIcreATNyBExtalisDbuMqQ==

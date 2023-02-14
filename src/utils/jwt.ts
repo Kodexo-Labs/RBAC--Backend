@@ -16,7 +16,7 @@ export const signJwt = (
 // ? Verify Access or Refresh Token
 export const verifyJwt = <T>(
     token: string,
-    keyName: 'accessTokenPublicKey' | 'refreshTokenPublicKey'
+    keyName: 'accessTokenPrivateKey' | 'refreshTokenPrivateKey'
   ): T | null => {
     try {
       const publicKey = config.get<string>(keyName);

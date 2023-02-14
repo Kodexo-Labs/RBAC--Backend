@@ -40,12 +40,13 @@ export const registerUserHandler = async (
   next: NextFunction
 ) => {
   try {
-    const { name, password, email } = req.body;
+    const { name, password, email, role } = req.body;
 
     const user = await createUser({
       name,
       email: email.toLowerCase(),
       password,
+      role,
     });
 
     res.status(201).json({
@@ -116,7 +117,7 @@ export const refreshAccessTokenHandler = async (
     // Validate refresh token
     const decoded = verifyJwt<{ sub: string }>(
       refresh_token,
-      'refreshTokenPublicKey'
+      'refreshTokenPrivateKey'
       );
       
       if (!decoded) {
