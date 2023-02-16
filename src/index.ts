@@ -8,13 +8,16 @@ import { AppDataSource } from './utils/data-source';
 import AppError from './utils/appError';
 import authRouter from './routes/auth.routes';
 import userRouter from './routes/user.routes';
+import roleRouter from './routes/role.routes';
 import validateEnv from './utils/validateEnv';
 
 AppDataSource.initialize()
   .then(async () => {
+    console.log("PostgreSQL Database Connected")
+    
     // VALIDATE ENV
     validateEnv();
-
+    
     const app = express();
 
     app.use(express.json({ limit: '10kb' }));
@@ -33,6 +36,8 @@ AppDataSource.initialize()
     // ROUTES
     app.use('/api/auth', authRouter);
     app.use('/api/user', userRouter);
+    app.use('/api/role', roleRouter);
+
 
     // UNHANDLED ROUTE
     app.all('*', (req: Request, res: Response, next: NextFunction) => {

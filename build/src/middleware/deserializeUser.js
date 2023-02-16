@@ -30,17 +30,12 @@ const deserializeUser = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             return next(new appError_1.default(401, 'You are not logged in'));
         }
         // Validate the access token
-        const decoded = (0, jwt_1.verifyJwt)(access_token, 'accessTokenPublicKey');
+        const decoded = (0, jwt_1.verifyJwt)(access_token, 'accessTokenPrivateKey');
         if (!decoded) {
             return next(new appError_1.default(401, `Invalid token or user doesn't exist`));
         }
-        // Check if the user has a valid session
-        let session;
-        if (!session) {
-            return next(new appError_1.default(401, `Invalid token or session has expired`));
-        }
         // Check if the user still exist
-        const user = yield (0, user_service_1.findUserById)(JSON.parse(session).id);
+        const user = yield (0, user_service_1.findUserById)(decoded.sub);
         if (!user) {
             return next(new appError_1.default(401, `Invalid token or session has expired`));
         }

@@ -11,9 +11,7 @@ const validateEnv = () => {
         POSTGRES_PASSWORD: (0, envalid_1.str)(),
         POSTGRES_DB: (0, envalid_1.str)(),
         JWT_ACCESS_TOKEN_PRIVATE_KEY: (0, envalid_1.str)(),
-        JWT_ACCESS_TOKEN_PUBLIC_KEY: (0, envalid_1.str)(),
         JWT_REFRESH_TOKEN_PRIVATE_KEY: (0, envalid_1.str)(),
-        JWT_REFRESH_TOKEN_PUBLIC_KEY: (0, envalid_1.str)(),
     });
 };
 exports.default = validateEnv;

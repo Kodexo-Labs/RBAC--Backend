@@ -28,11 +28,12 @@ const accessTokenCookieOptions = Object.assign(Object.assign({}, cookiesOptions)
 const refreshTokenCookieOptions = Object.assign(Object.assign({}, cookiesOptions), { expires: new Date(Date.now() + config_1.default.get('refreshTokenExpiresIn') * 60 * 1000), maxAge: config_1.default.get('refreshTokenExpiresIn') * 60 * 1000 });
 const registerUserHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, password, email } = req.body;
+        const { name, password, email, role } = req.body;
         const user = yield (0, user_service_1.createUser)({
             name,
             email: email.toLowerCase(),
             password,
+            role,
         });
         res.status(201).json({
             status: 'success',
@@ -85,31 +86,27 @@ const refreshAccessTokenHandler = (req, res, next) => __awaiter(void 0, void 0, 
             return next(new appError_1.default(403, message));
         }
         // Validate refresh token
-        const decoded = (0, jwt_1.verifyJwt)(refresh_token, 'refreshTokenPublicKey');
+        const decoded = (0, jwt_1.verifyJwt)(refresh_token, 'refreshTokenPrivateKey');
         if (!decoded) {
             return next(new appError_1.default(403, message));
         }
-        console.log();
         // Check if user still exist
-        // const user = await findUserById(JSON.parse(session).id);
-        // if (!user) {
-        //   return next(new AppError(403, message));
-        // }
-        // // Sign new access token
-        // const access_token = signJwt({ sub: user.id }, 'accessTokenPrivateKey', {
-        //   expiresIn: `${config.get<number>('accessTokenExpiresIn')}m`,
-        // });
+        const user = yield (0, user_service_1.findUserById)(decoded.sub);
+        if (!user) {
+            return next(new appError_1.default(403, message));
+        }
+        // Sign new access token7
+        const access_token = (0, jwt_1.signJwt)({ sub: user.id }, 'accessTokenPrivateKey', {
+            expiresIn: `${config_1.default.get('accessTokenExpiresIn')}m`,
+        });
         // 4. Add Cookies
-        // res.cookie('access_token', access_token, accessTokenCookieOptions);
-        // res.cookie('logged_in', true, {
-        //   ...accessTokenCookieOptions,
-        //   httpOnly: false,
-        // });
-        // // 5. Send response
-        // res.status(200).json({
-        //   status: 'success',
-        //   access_token,
-        // });
+        res.cookie('access_token', access_token, accessTokenCookieOptions);
+        res.cookie('logged_in', true, Object.assign(Object.assign({}, accessTokenCookieOptions), { httpOnly: false }));
+        // 5. Send response
+        res.status(200).json({
+            status: 'success',
+            access_token,
+        });
     }
     catch (err) {
         next(err);
@@ -124,7 +121,6 @@ const logout = (res) => {
 const logoutHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = res.locals.user;
-        // await redisClient.del(user.id);
         logout(res);
         res.status(200).json({
             status: 'success',

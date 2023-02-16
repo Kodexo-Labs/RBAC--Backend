@@ -2,6 +2,8 @@ require('dotenv').config();
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import config from 'config';
+import { User } from '../entities/user.entity';
+import { Role } from '../entities/role.entity';
 
 const postgresConfig = config.get<{
   host: string;
@@ -16,7 +18,7 @@ export const AppDataSource = new DataSource({
   type: 'postgres',
   synchronize: true,
   logging: false,
-  entities: ['src/entities/**/*.entity{.ts,.js}'],
-  migrations: ['src/migrations/**/*{.ts,.js}'],
-  subscribers: ['src/subscribers/**/*{.ts,.js}'],
+  entities: [User, Role],
+  migrations: [],
+  subscribers: [],
 });

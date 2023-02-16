@@ -12,6 +12,18 @@ export const createUser = async (input: CreateUserInput) => {
   )) as User;
 };
 
+export const getAllUsers = async () => {
+  return await userRepository.find();
+}
+
+export const deleteUser = async(userId: string) => {
+  return await AppDataSource.createQueryBuilder()
+    .delete()
+    .from(User, 'user')
+    .where('id = :id', {id: userId})
+    .execute()
+}
+
 export const findUserByEmail = async ({ email }: { email: string }) => {
   return await userRepository.findOneBy({ email });
 };

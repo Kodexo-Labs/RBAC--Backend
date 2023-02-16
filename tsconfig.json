@@ -1,15 +1,18 @@
 {
-   "compilerOptions": {
-     "target": "es2016",
-     "experimentalDecorators": true,
-     "emitDecoratorMetadata": true,
-     "module": "commonjs",
-     "esModuleInterop": true,
-     "forceConsistentCasingInFileNames": true,
-     "strict": true,
-     "strictPropertyInitialization": false,
-     "skipLibCheck": true,
-     "outDir": "./build",
-     "rootDir": "."
-   }
- }
+  "compilerOptions": {
+    "lib": [
+      "es5", "es6", "dom", "dom.iterable"
+    ],
+    "target": "es2016",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true,
+    "outDir": "./build",
+    "rootDir": "."
+  }
+}

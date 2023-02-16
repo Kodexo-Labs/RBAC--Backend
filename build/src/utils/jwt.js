@@ -8,14 +8,14 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("config"));
 // ? Sign Access or Refresh Token
 const signJwt = (payload, keyName, options) => {
-    const privateKey = Buffer.from(config_1.default.get(keyName), 'base64').toString('ascii');
-    return jsonwebtoken_1.default.sign(payload, privateKey, Object.assign(Object.assign({}, (options && options)), { algorithm: 'RS256' }));
+    const privateKey = config_1.default.get(keyName);
+    return jsonwebtoken_1.default.sign(payload, privateKey, Object.assign({}, (options && options)));
 };
 exports.signJwt = signJwt;
 // ? Verify Access or Refresh Token
 const verifyJwt = (token, keyName) => {
     try {
-        const publicKey = Buffer.from(config_1.default.get(keyName), 'base64').toString('ascii');
+        const publicKey = config_1.default.get(keyName);
         const decoded = jsonwebtoken_1.default.verify(token, publicKey);
         return decoded;
     }

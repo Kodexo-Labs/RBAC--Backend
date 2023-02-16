@@ -22,9 +22,11 @@ const data_source_1 = require("./utils/data-source");
 const appError_1 = __importDefault(require("./utils/appError"));
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
+const role_routes_1 = __importDefault(require("./routes/role.routes"));
 const validateEnv_1 = __importDefault(require("./utils/validateEnv"));
 data_source_1.AppDataSource.initialize()
     .then(() => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("PostgreSQL Database Connected");
     // VALIDATE ENV
     (0, validateEnv_1.default)();
     const app = (0, express_1.default)();
@@ -38,13 +40,8 @@ data_source_1.AppDataSource.initialize()
     }));
     // ROUTES
     app.use('/api/auth', auth_routes_1.default);
-    app.use('/api/users', user_routes_1.default);
-    // HEALTH CHECKER
-    app.get('/', (_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        res.status(200).json({
-            status: 'success',
-        });
-    }));
+    app.use('/api/user', user_routes_1.default);
+    app.use('/api/role', role_routes_1.default);
     // UNHANDLED ROUTE
     app.all('*', (req, res, next) => {
         next(new appError_1.default(404, `Route ${req.originalUrl} not found`));
